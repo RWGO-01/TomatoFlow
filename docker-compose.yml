@@ -1,0 +1,32 @@
+services:
+  postgresql:
+    image: bitnami/postgresql:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USER=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DB=polls
+    volumes:
+      - polls_pg_data:/bitnami/postgresql
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - polls_redis_data:/bitnami/redis/data
+
+  ionic:
+    build: .
+    ports:
+      - "8100:8100"
+    volumes:
+      - .:/app
+    command: ionic serve --host=0.0.0.0 --port=8100
+
+volumes:
+  polls_pg_data:
+  polls_redis_data:

@@ -1,0 +1,189 @@
+import { Component } from '@angular/core';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
+@Component({
+  standalone: true,
+  selector: 'app-reset-password',
+  imports: [IonicModule, FormsModule],
+  template: `
+  <ion-content class="ion-padding page">
+
+    <div class="container">
+
+      <ion-icon name="timer-outline" class="logo"></ion-icon>
+
+      <h1>Recuperar Senha</h1>
+      <p class="subtitle">Enviaremos um link para você redefinir sua senha.</p>
+
+      <div class="card">
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="floating">E-mail</ion-label>
+          <ion-input [(ngModel)]="email" type="email" inputmode="email"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" color="warning" class="action-btn" (click)="sendReset()">
+          Enviar E-mail
+        </ion-button>
+
+        <ion-text class="links">
+          Lembrou a senha? <a (click)="goLogin()">Faça login</a>
+        </ion-text>
+
+      </div>
+
+    </div>
+
+  </ion-content>
+  `,
+  styles: [`
+    /* page background */
+    .page {
+      --background: #000 !important;
+      color: #ffffff;
+      display: flex;
+      justify-content: flex-start; /* parecido com login/register: card mais para o topo */
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 28px;
+    }
+
+    .container {
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      padding: 8px 16px 36px 16px;
+    }
+
+    .logo {
+      font-size: 64px;
+      color: orange;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 6px 0 4px 0;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .subtitle {
+      color: #bfbfbf;
+      margin-bottom: 18px;
+      font-size: 14px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* card */
+    .card {
+      background: linear-gradient(180deg, #0f0f0f 0%, #141414 100%);
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,165,0,0.06);
+      animation: popIn 0.28s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.995); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* inputs */
+    .input-item {
+      --background: #0e0e0e;
+      --border-color: #262626;
+      color: #fff;
+      border-radius: 12px;
+      margin: 0;
+      width: 100%;
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    ion-label {
+      color: #dcdcdc !important;
+      font-weight: 500;
+    }
+
+    ion-input {
+      color: #fff !important;
+    }
+
+    /* action button */
+    .action-btn {
+      margin-top: 8px;
+      border-radius: 12px;
+      font-weight: 800;
+      height: 48px;
+      width: 100%;
+      --background: orange;
+      --box-shadow: 0 6px 18px rgba(255,165,0,0.12);
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+    .action-btn:active { transform: translateY(1px) scale(0.998); }
+
+    /* links */
+    .links {
+      display: block;
+      margin-top: 6px;
+      color: #bfbfbf;
+      font-size: 14px;
+    }
+
+    a {
+      color: orange;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* responsive */
+    @media (max-width: 420px) {
+      .container { padding: 12px; }
+      .logo { font-size: 56px; }
+      h1 { font-size: 24px; }
+      .card { padding: 18px; }
+      .action-btn { height: 46px; }
+    }
+  `]
+})
+export class ResetPasswordComponent {
+  email = '';
+
+  constructor(private router: Router, private toastCtrl: ToastController) {}
+
+  async sendReset() {
+    if (!this.email) {
+      const toast = await this.toastCtrl.create({
+        message: 'Informe o e-mail',
+        duration: 2000,
+        color: 'danger'
+      });
+      toast.present();
+      return;
+    }
+
+    const toast = await this.toastCtrl.create({
+      message: 'Link enviado para o e-mail',
+      duration: 2000,
+      color: 'success'
+    });
+    toast.present();
+
+    this.router.navigate(['/login']);
+  }
+
+  goLogin() {
+    this.router.navigate(['/login']);
+  }
+}
